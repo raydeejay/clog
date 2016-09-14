@@ -2,7 +2,7 @@
 
 (asdf:defsystem #:clog
   :description "A simple static blog generator"
-  :author "Sergi Reyner <sergi.reyner@gmail.com>>"
+  :author "Sergi Reyner <sergi.reyner@gmail.com>"
   :license "MIT"
   :serial t
   :depends-on (#:split-sequence
