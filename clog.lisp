@@ -219,6 +219,12 @@ directory, without any extension. This gets us nice URLs."
 (defun export-blog ()
   (let ((*config* (read-config (merge-pathnames (make-pathname :name ".clogrc")
                                                 (user-homedir-pathname)))))
+    (make-output-directories)
     (process-posts (assoc-value *config* :source)
                    (assoc-value *config* :output))
     (process-additional-files)))
+
+(defun make-output-directories ()
+  (mapc (lambda (dir)
+          (ensure-directories-exist (make-config-path :output dir) :mode 511))
+        '("css/" "files/" "images/" "js/" "posts/" "tags/")))
