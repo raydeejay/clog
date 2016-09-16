@@ -35,10 +35,10 @@
 (defun navbar ()
   (with-html-output-to-string (s nil :indent t)
     (:div :class "navigation"
-          (:a :href (make-config-path :url "") "HOME")
-          (:a :href (make-config-path :url "posts/") "INDEX")
-          (:a :href (make-config-path :url "tags/") "TAGS")
-          (:a :href (make-config-path :url "archive/") "ARCHIVE"))))
+          (:a :href  "/" "HOME")
+          (:a :href "/posts/" "INDEX")
+          (:a :href "/tags/" "TAGS")
+          (:a :href "/archive/" "ARCHIVE"))))
 
 (defun footer ()
   (with-html-output-to-string (s nil :indent t)
@@ -49,10 +49,10 @@
   (with-html-output-to-string (s nil :prologue T :indent T)
     (:html
       (:head
-       (:link :rel "stylesheet" :href (make-config-path :url "css/style.css")) ; use LASS
-       (:link :rel "stylesheet" :href (make-config-path :url "css/colorize.css"))
-       (:link :rel "stylesheet" :href (make-config-path :url "css/highlight.css")) ; use LASS
-       (:script :src (make-config-path :url "js/highlight.pack.js"))
+       (:link :rel "stylesheet" :href "/css/style.css") ; use LASS
+       (:link :rel "stylesheet" :href "/css/colorize.css")
+       (:link :rel "stylesheet" :href "/css/highlight.css") ; use LASS
+       (:script :src "/js/highlight.pack.js")
        (:script "hljs.initHighlightingOnLoad();")) ; use Parenscript
       (:body (str (navbar))
              (str content)
