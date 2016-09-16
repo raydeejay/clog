@@ -142,7 +142,7 @@
   (sort posts #'string-greaterp :key (lambda (post) (assoc-value post :date))))
 
 (defun sort-tags! (tags)
-  (sort tags #'string-greaterp :key (lambda (tag) (assoc-value tag :date))))
+  (sort (remove-duplicates tags :test #'string-equal) #'string-lessp))
 
 (defun link-posts! (prev next)
   (rplacd (assoc :prev next)
@@ -179,9 +179,9 @@
                           (plist-alist (list :tag tag :elements slugs))
                           (make-config-path :output (format nil "tags/~A" tag)))
      :collecting tag :into tags-list
-     :finally (export-pipeline "templates/tags-index.mustache"
-                               (plist-alist (list :elements tags-list))
-                               (make-config-path :output "tags/index.html"))))
+     :finally (progn (export-pipeline "templates/tags-index.mustache"
+                                      (plist-alist (list :elements (sort-tags! tags-list)))
+                                      (make-config-path :output "tags/index.html")))))
 
 (defun process-posts (path output-path)
   "Takes a directory path string, and iterates over all the .post
