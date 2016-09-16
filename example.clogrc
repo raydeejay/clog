@@ -1,0 +1,5 @@
+
+((:SOURCE . "/home/user/blog")
+ (:OUTPUT . "/var/www/html")
+ (:REMOTE . "host.myserver.net")
+ (:URL . "http://blog.myserver.net")) 
