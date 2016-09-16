@@ -1,0 +1,14 @@
+<div id='nextprev'>
+{{#next}} <span id='next'><a href="{{link}}">&lt;&lt;Older</a></span> {{/next}}
+{{#prev}} <span id='prev'><a href='{{link}}'>Newer&gt;&gt;</a></span> {{/prev}}
+</div>
+<h1 class='title'>{{title}}</h1>
+
+<span class='article-meta'>Written by <a>{{author}}</a> on <span class='date'>{{date}}</span></span>.
+
+<div class='article-content'>{{{content}}}</div>
+
+<div class='article-meta'>Tagged
+{{#tags}}
+  <a href='tags/{{{.}}}'>{{{.}}}</a>
+{{/tags}}</div>

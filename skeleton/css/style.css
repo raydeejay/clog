@@ -1,0 +1,74 @@
+#content { background: #fff; padding-top: 1em }
+#header { float: right; margin-left: 1em; margin-bottom: 1em }
+#coleslaw-logo { float: right; }
+a { text-decoration: none; color: #992900 }
+a.anchor { color: black }
+.date { font-style: italic }
+.title { margin-left: 1em }
+.article-meta { margin-left: 2.2em; margin-bottom: 2.2em }
+.archive-title { font-size: 1em } .article-title { font-size: 2em }
+.article-content { margin-left: 2.2em }
+.fineprint { text-align: center; font-size: .9em; margin-top: .5em }
+.tag-low { font-size: .8em; font-weight: 200 }
+.tag-medium { font-size: 1.2em; font-weight: 600 }
+.tag-high { font-size: 1.8em; font-weight: 800 }
+.navigation { font-size: 1.2em; border-bottom: 1px solid }
+body { background-color: white; font-family: Vollkorn; font-size: 1.2em; height: 100%; width: 40em; margin: 0 auto }
+pre { overflow: auto; margin-left: 1em; padding: 0.5em; border-left: 1px dashed;
+      background-color: white; padding: .75em .5em; font-family: (unquote mono-font) }
+tt { font-size: .9em; font-family: (unquote mono-font) }
+
+#nextprev { margin-top: 1em; margin-bottom: 2.5em; display: block }
+#next { float: left }
+#prev { float: right }
+
+@media (max-width: 680px) {
+
+    #content {
+        padding-top: 0em
+    }
+
+    .title {
+        margin-left: 0.1em;
+    }
+
+    .article-meta {
+        margin-bottom: 1em;
+    }
+
+    .article-meta, .article-content {
+        float: left;
+        margin-left: 0em;
+        margin-right: 0em;
+        width: 90%;
+        padding-left: 5%;
+    }
+
+    .article, .article-content {
+        margin-left: 0em;
+        text-align: justify;
+    }
+
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+    }
+
+    #coleslaw-logo {
+        float: none;
+    }
+
+    #coleslaw-logo img {
+        margin-left: auto;
+        margin-right: auto;
+        float: none;
+        width: auto;
+    }
+
+    .fineprint a img {
+        width: auto;
+        clear: both;
+    }
+}

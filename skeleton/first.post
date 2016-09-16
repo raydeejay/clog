@@ -1,0 +1,40 @@
+title: Demo Post
+author: admin
+date: 2016-09-11 22:30
+tags: demo important-posts
+
+Today I wanted a pony.
+
+Ok, maybe not a pony, but I wanted a simple to use and customize
+static blog generator, and what I found didn't fulfill my
+needs. Therefore, I developed an itch, and as we all know, when one
+develops an itch, one must scratch it.
+
+And that's why you are using **Clog** now :)
+
+#### Code highlight samples
+
+##### Common Lisp
+```lisp
+(defun export-blog ()
+  (let ((*config* (read-config (merge-pathnames (make-pathname :name ".clogrc")
+                                                (user-homedir-pathname)))))
+    (make-source-directories)
+    (make-output-directories)
+    (process-posts (assoc-value *config* :source)
+                   (assoc-value *config* :output))
+    (process-additional-files)))
+
+(mapcar #'(lambda (x y)
+            (sqrt (* x y)))
+        p q)
+```
+
+##### Javascript
+```
+$(document).ready(function() {
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+```
