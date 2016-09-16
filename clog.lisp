@@ -211,4 +211,4 @@ directory, without any extension. This gets us nice URLs."
                                                 (user-homedir-pathname)))))
     (process-posts (assoc-value *config* :source)
                    (assoc-value *config* :output))
-    (process-additional-files (assoc-value *config* :output))))
+    (process-additional-files)))
