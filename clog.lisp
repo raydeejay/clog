@@ -165,17 +165,17 @@
       (export-content output-pathname)))
 
 (defun process-post-index (posts)
-  (export-pipeline "posts-index.mustache"
+  (export-pipeline "templates/posts-index.mustache"
                    (plist-alist (list :elements posts))
                    (make-config-path :output "posts/index.html")))
 
 (defun process-tag-index (tags)
   (loop :for tag :being :the :hash-keys :in tags :using (hash-value slugs)
-     :do (export-pipeline "tag.mustache"
+     :do (export-pipeline "templates/tag.mustache"
                           (plist-alist (list :tag tag :elements slugs))
                           (make-config-path :output (format nil "tags/~A" tag)))
      :collecting tag :into tags-list
-     :finally (export-pipeline "tags-index.mustache"
+     :finally (export-pipeline "templates/tags-index.mustache"
                                (plist-alist (list :elements tags-list))
                                (make-config-path :output "tags/index.html"))))
 
@@ -194,7 +194,7 @@ directory, without any extension. This gets us nice URLs."
                         (push `((:slug . ,(assoc-value post :slug)))
                                (gethash tag tags (list))))
                       (assoc-value post :tags))
-                (export-pipeline "template.mustache" post output-pathname)
+                (export-pipeline "templates/post.mustache" post output-pathname)
                 (when link-file
                   (when (probe-file link-file) (sb-posix:unlink link-file))
                   (sb-posix:symlink (namestring output-pathname) link-file)))
