@@ -25,6 +25,9 @@
 (defun make-a-path (base node)
   (format nil "~A/~A" base node))
 
+(defun make-config-path (key node)
+  (make-a-path (assoc-value *config* key) node))
+
 ;;; skeleton
 ;; provide function to write skeleton to disk, MAKE-BLOG or so
 ;; write lisp functions using cl-who, lass and perhaps parenscript, to generate that skeleton
