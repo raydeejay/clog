@@ -41,7 +41,7 @@
 
 (defun footer ()
   (with-html-output-to-string (s nil :indent t)
-    (:div :class "footer" "(C) 2016 Sergi Reyner. All rights reserved (for now).")))
+    (:div :class "footer fineprint" "(C) 2016 Sergi Reyner. All rights reserved (for now).")))
 
 (defun add-boilerplate (content)
   "Fill a page template with the content"
