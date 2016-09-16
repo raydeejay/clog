@@ -93,7 +93,7 @@
           (3bmd-tables:*tables* t))
       (3bmd:parse-string-and-print-to-stream md s))))
 
-(defun expand-mustache (template data)
+(defun expand-mustache (template &optional data)
   (mustache:render* template data))
 
 ;;; posts
