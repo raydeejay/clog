@@ -32,17 +32,17 @@
 ;; provide function to write skeleton to disk, MAKE-BLOG or so
 ;; write lisp functions using cl-who, lass and perhaps parenscript, to generate that skeleton
 ;; write config tailored to that skeleton too
-(defun navbar ()
-  (with-html-output-to-string (s nil :indent t)
-    (:div :class "navigation"
-          (:a :href  "/" "HOME")
-          (:a :href "/posts/" "INDEX")
-          (:a :href "/tags/" "TAGS")
-          (:a :href "/archive/" "ARCHIVE"))))
+;; (defun navbar ()
+;;   (with-html-output-to-string (s nil :indent t)
+;;     (:div :class "navigation"
+;;           (:a :href  "/" "HOME")
+;;           (:a :href "/posts/" "INDEX")
+;;           (:a :href "/tags/" "TAGS")
+;;           (:a :href "/archive/" "ARCHIVE"))))
 
-(defun footer ()
-  (with-html-output-to-string (s nil :indent t)
-    (:div :class "footer fineprint" "(C) 2016 Sergi Reyner. All rights reserved (for now)." (:span :class "powered" "Powered by " (:a :href "https://github.com/raydeejay/clog" "Clog") "."))))
+;; (defun footer ()
+;;   (with-html-output-to-string (s nil :indent t)
+;;     (:div :class "footer fineprint" "(C) 2016 Sergi Reyner. All rights reserved (for now)." (:span :class "powered" "Powered by " (:a :href "https://github.com/raydeejay/clog" "Clog") "."))))
 
 (defun add-boilerplate (content)
   "Fill a page template with the content"
@@ -54,9 +54,13 @@
        (:link :rel "stylesheet" :href "/css/highlight.css") ; use LASS
        (:script :src "/js/highlight.pack.js")
        (:script "hljs.initHighlightingOnLoad();")) ; use Parenscript
-      (:body (str (navbar))
+      (:body (str (-> (make-config-path :source "templates/navbar.mustache")
+                      (read-file-into-string)
+                      (expand-mustache)))
              (str content)
-             (str (footer))))))
+             (str (-> (make-config-path :source "templates/footer.mustache")
+                      (read-file-into-string)
+                      (expand-mustache)))))))
 
 ;; (defun make-directories (path)
 ;;   (mapc (lambda (subdir)
