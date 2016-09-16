@@ -16,6 +16,7 @@
                #:3bmd-ext-definition-lists
                #:3bmd-ext-tables
                #:cl-mustache
-               #:cl-slug)
+               #:cl-slug
+               #:cl-arrows)
   :components ((:file "package")
                (:file "clog")))

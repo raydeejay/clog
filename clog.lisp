@@ -35,9 +35,10 @@
 (defun navbar ()
   (with-html-output-to-string (s nil :indent t)
     (:div :class "navigation"
-          (:a :href (make-a-path (assoc-value *config* :url) "") "HOME")
-          (:a :href (make-a-path (assoc-value *config* :url) "posts/") "INDEX")
-          (:a :href (make-a-path (assoc-value *config* :url) "archive/") "ARCHIVE"))))
+          (:a :href (make-config-path :url "") "HOME")
+          (:a :href (make-config-path :url "posts/") "INDEX")
+          (:a :href (make-config-path :url "tags/") "TAGS")
+          (:a :href (make-config-path :url "archive/") "ARCHIVE"))))
 
 (defun footer ()
   (with-html-output-to-string (s nil :indent t)
@@ -48,10 +49,10 @@
   (with-html-output-to-string (s nil :prologue T :indent T)
     (:html
       (:head
-       (:link :rel "stylesheet" :href (make-a-path (assoc-value *config* :url) "css/style.css")) ; use LASS
-       (:link :rel "stylesheet" :href (make-a-path (assoc-value *config* :url) "css/colorize.css"))
-       (:link :rel "stylesheet" :href (make-a-path (assoc-value *config* :url) "css/highlight.css")) ; use LASS
-       (:script :src (make-a-path (assoc-value *config* :url) "js/highlight.pack.js"))
+       (:link :rel "stylesheet" :href (make-config-path :url "css/style.css")) ; use LASS
+       (:link :rel "stylesheet" :href (make-config-path :url "css/colorize.css"))
+       (:link :rel "stylesheet" :href (make-config-path :url "css/highlight.css")) ; use LASS
+       (:script :src (make-config-path :url "js/highlight.pack.js"))
        (:script "hljs.initHighlightingOnLoad();")) ; use Parenscript
       (:body (str (navbar))
              (str content)
@@ -136,6 +137,9 @@
 (defun sort-posts! (posts)
   (sort posts #'string-greaterp :key (lambda (post) (assoc-value post :date))))
 
+(defun sort-tags! (tags)
+  (sort tags #'string-greaterp :key (lambda (tag) (assoc-value tag :date))))
+
 (defun link-posts! (prev next)
   (rplacd (assoc :prev next)
           (list (cons :link (assoc-value prev :slug))))
@@ -150,44 +154,52 @@
   (loop :for prev := nil :then post
      :for post :in posts
      :doing (progn (when prev (link-posts! prev post))
-                   (expand-post! post)))
-  posts)
+                   (expand-post! post))
+     :finally (return posts)))
 
-(defun make-index-metadata (post)
-  (plist-alist (list :date (assoc-value post :date)
-                     :title (assoc-value post :title)
-                     :slug (assoc-value post :slug))))
+(defun export-pipeline (template data output-pathname)
+  (-> (make-config-path :source template)
+      (read-file-into-string)
+      (expand-mustache data)
+      (add-boilerplate)
+      (export-content output-pathname)))
+
+(defun process-post-index (posts)
+  (export-pipeline "posts-index.mustache"
+                   (plist-alist (list :elements posts))
+                   (make-config-path :output "posts/index.html")))
+
+(defun process-tag-index (tags)
+  (loop :for tag :being :the :hash-keys :in tags :using (hash-value slugs)
+     :do (export-pipeline "tag.mustache"
+                          (plist-alist (list :tag tag :elements slugs))
+                          (make-config-path :output (format nil "tags/~A" tag)))
+     :collecting tag :into tags-list
+     :finally (export-pipeline "tags-index.mustache"
+                               (plist-alist (list :elements tags-list))
+                               (make-config-path :output "tags/index.html"))))
 
 (defun process-posts (path output-path)
   "Takes a directory path string, and iterates over all the .post
 files in it, generating a corresponding HTML file in the output
 directory, without any extension. This gets us nice URLs."
-  (let ((posts (sort-posts! (load-directory path ".post"))))
-    (loop :for post :in (link-and-expand! posts)
-       :for link-file := (make-a-path (assoc-value *config* :output) "index.html") :then NIL
-       :with index-elements
+  (let ((posts (link-and-expand! (sort-posts! (load-directory path ".post")))))
+    (loop :for post :in posts
+       :for link-file := (make-config-path :output "index.html") :then NIL
+       :with tags := (make-hash-table)
        :doing (let ((output-pathname (make-pathname :name (assoc-value post :slug)
                                                     :type :unspecific
                                                     :directory output-path)))
-                (push (make-index-metadata post) index-elements)
-                (export-content
-                 (add-boilerplate
-                  (expand-mustache
-                   (read-file-into-string
-                    (make-a-path (assoc-value *config* :source) "template.mustache"))
-                   post))
-                 output-pathname)
+                (mapc (lambda (tag)
+                        (push `((:slug . ,(assoc-value post :slug)))
+                               (gethash tag tags (list))))
+                      (assoc-value post :tags))
+                (export-pipeline "template.mustache" post output-pathname)
                 (when link-file
-                  (when (probe-file link-file)
-                    (sb-posix:unlink link-file))
-                  (sb-posix:symlink (namestring output-pathname)
-                                    link-file)))
-       :finally (export-content
-                 (add-boilerplate (expand-mustache
-                                   (read-file-into-string (make-a-path (assoc-value *config* :source)
-                                                                       "posts-index.mustache"))
-                                   (plist-alist (list :elements index-elements))))
-                 (make-a-path (assoc-value *config* :output) "posts/index.html")))))
+                  (when (probe-file link-file) (sb-posix:unlink link-file))
+                  (sb-posix:symlink (namestring output-pathname) link-file)))
+       :finally (progn (process-post-index posts)
+                       (process-tag-index tags)))))
 
 (defun copy-file-to-directory (pathspec output-pathspec)
   (let* ((from (pathname pathspec))

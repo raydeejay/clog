@@ -8,11 +8,13 @@
         #:split-sequence
         #:mustache
         #:3bmd
-        #:slug)
+        #:slug
+        #:cl-arrows)
   (:export #:export-blog
            #:process-posts)
   (:import-from #:alexandria
                 #:assoc-value
                 #:plist-alist
-                #:read-file-into-string))
+                #:read-file-into-string
+                #:write-string-into-file))
 
