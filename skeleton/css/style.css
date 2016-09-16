@@ -22,6 +22,10 @@ tt { font-size: .9em; font-family: (unquote mono-font) }
 #next { float: left }
 #prev { float: right }
 
+table { margin: 2em 0em 2em 0em }
+th { background-color: grey }
+td { padding: 0 2em 0 0 }
+
 @media (max-width: 680px) {
 
     #content {
