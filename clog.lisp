@@ -215,6 +215,11 @@ directory, without any extension. This gets us nice URLs."
           ("css/highlight.css" . "css")
           ("js/highlight.pack.js" . "js"))))
 
+(defun make-output-directories ()
+  (mapc (lambda (dir)
+          (ensure-directories-exist (make-config-path :output dir) :mode 511))
+        '("css/" "files/" "images/" "js/" "posts/" "tags/")))
+
 ;;; entry points
 (defun export-blog ()
   (let ((*config* (read-config (merge-pathnames (make-pathname :name ".clogrc")
@@ -224,7 +229,5 @@ directory, without any extension. This gets us nice URLs."
                    (assoc-value *config* :output))
     (process-additional-files)))
 
-(defun make-output-directories ()
-  (mapc (lambda (dir)
-          (ensure-directories-exist (make-config-path :output dir) :mode 511))
-        '("css/" "files/" "images/" "js/" "posts/" "tags/")))
+(defun make-blog ()
+  "Create a source skeleton tree with initial files.")
