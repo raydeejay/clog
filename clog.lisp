@@ -80,11 +80,6 @@
 ;;   (make-scripts path))
 
 ;;; exporting
-(defun export-content (content path)
-  "Write a string to a file."
-  (with-open-file (f path :direction :output :if-exists :supersede)
-    (format f "~A~%" content)))
-
 (defmethod 3bmd-wiki:process-wiki-link ((wiki T) normalized-target formatted-target args stream)
   (format stream "<a href='~A'>~A</a>"
           formatted-target
@@ -168,7 +163,7 @@
       (read-file-into-string)
       (expand-mustache data)
       (add-boilerplate)
-      (export-content output-pathname)))
+      (write-string-into-file output-pathname :if-exists :supersede)))
 
 (defun process-post-index (posts)
   (export-pipeline "templates/posts-index.mustache"
