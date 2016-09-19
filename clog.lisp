@@ -97,6 +97,11 @@
 (defun expand-mustache (template &optional data)
   (mustache:render* template data))
 
+;; Atom feeds
+(defun make-rfc3339-timestamp (str)
+  (local-time:parse-timestring (concatenate 'string str ":00.00+0100")
+                               :date-time-separator #\Space))
+
 ;;; posts
 (defun load-post-metadata (stream)
   (loop :for line := (read-line stream)
