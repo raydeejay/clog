@@ -8,7 +8,9 @@
 (defparameter *default-config* `((:source . "/path/to/blog")
                                  (:output . "/path/for/output")
                                  (:remote . "remote.host.com")
-                                 (:url . "http://your.blog.url")))
+                                 (:url . "http://your.blog.url")
+                                 (:title . "A blog")
+                                 (:author . "Anonymous")))
 (defparameter *config* nil)
 
 (defun create-config (path)
