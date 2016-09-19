@@ -215,6 +215,11 @@
                                       (plist-alist (list :elements (sort-tags! tags-list)))
                                       (make-config-path :output "tags/index.html")))))
 
+(defun process-feed (posts)
+  (write-string-into-file (make-feed posts)
+                          (make-config-path :output "feed")
+                          :if-exists :supersede))
+
 (defun process-posts (path output-path)
   "Takes a directory path string, and iterates over all the .post
 files in it, generating a corresponding HTML file in the output
@@ -235,7 +240,9 @@ directory, without any extension. This gets us nice URLs."
                   (when (probe-file link-file) (sb-posix:unlink link-file))
                   (sb-posix:symlink (namestring output-pathname) link-file)))
        :finally (progn (process-post-index posts)
-                       (process-tag-index tags)))))
+                       (process-tag-index tags)
+                       (process-feed posts)))))
+
 
 (defun copy-file-to-directory (pathspec output-pathspec)
   (let* ((from (pathname pathspec))
