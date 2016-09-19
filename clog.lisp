@@ -102,6 +102,34 @@
   (local-time:parse-timestring (concatenate 'string str ":00.00+0100")
                                :date-time-separator #\Space))
 
+(defun make-feed (posts)
+  (let ((newest (first (sort (remove nil (loop for post in posts
+                                            :collecting (assoc-value post :date)
+                                            :collecting (assoc-value post :updated)))
+                             #'string-greaterp))))
+    (with-html-output-to-string (_)
+      (str "<?xml version='1.0' encoding='utf-8'?>")
+      (:feed :xmlns "http://www.w3.org/2005/Atom"
+             (:title (str (assoc-value *config* :title)))
+             (:link :href (assoc-value *config* :url))
+             (:link :rel "self" :href (conc (assoc-value *config* :url) "/feed"))
+             (:updated (str (make-rfc3339-timestamp newest)))
+             (:author (:name (str (assoc-value *config* :author))))
+             (:id (str (assoc-value *config* :url)))
+             (fmt "~{~A~}" (loop :for p :in posts :collecting (make-feed-entry p)))))))
+
+(defun make-feed-entry (post)
+  (let ((url (concatenate 'string
+                          (make-config-path :url "")
+                          (assoc-value post :slug))))
+    (with-html-output-to-string (_)
+      (:entry (:title (str (assoc-value post :title)))
+              (:author (:name (str (assoc-value post :author))))
+              (:link :href url)
+              (:id (str url))
+              (:updated (str (make-rfc3339-timestamp (assoc-value post :date))))
+              (:content :type "html" (esc (assoc-value post :content)))))))
+
 ;;; posts
 (defun load-post-metadata (stream)
   (loop :for line := (read-line stream)
