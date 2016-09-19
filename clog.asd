@@ -17,6 +17,7 @@
                #:3bmd-ext-tables
                #:cl-mustache
                #:cl-slug
-               #:cl-arrows)
+               #:cl-arrows
+               #:local-time)
   :components ((:file "package")
                (:file "clog")))
